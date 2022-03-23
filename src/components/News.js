@@ -10,14 +10,15 @@ export class News extends Component {
         console.log('Hello, I am from News Component');
         this.state = {
            articles: [], // Provided Empty array for the news that will fetched through the url
-           loading: false
+           loading: false,
+           page: 1
         }
     }
 
     // componentDidMount will run after the render method will run
 
     async componentDidMount() {
-      let url = "https://newsapi.org/v2/top-headlines?country=in&apiKey=4871d65e1293480d8d9991b06259253e"
+      let url = "https://newsapi.org/v2/top-headlines?country=in&apiKey=4871d65e1293480d8d9991b06259253e&page=1"
 
       let data = await fetch(url) 
       let djson = await data.json()
@@ -25,11 +26,37 @@ export class News extends Component {
       this.setState({articles: djson.articles})
     }
     
+    prevNews = async ()=>{
+        console.log("Previous Clicked");
+        let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=4871d65e1293480d8d9991b06259253e&page=${this.state.page - 1}`
+
+      let data = await fetch(url) 
+      let djson = await data.json()
+      console.log(djson)
+      this.setState({
+          articles: djson.articles,
+          page: this.state.page - 1
+        })
+    }
+
+    nextNews = async ()=>{
+        console.log("Next Clicked");
+        let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=4871d65e1293480d8d9991b06259253e&page=${this.state.page + 1}`
+
+      let data = await fetch(url) 
+      let djson = await data.json()
+      console.log(djson)
+      this.setState({
+          articles: djson.articles,
+          page: this.state.page + 1
+        })
+    }
     render() {
         return (
+            <>
             <div>
-                <div className="container">
-                    <h2>Headlines</h2>
+                <div className="container my-4">
+                    <h2>Top Headlines</h2>
                     <div className="row">
                     {this.state.articles.map((element)=>{
 
@@ -43,6 +70,11 @@ export class News extends Component {
                     </div>
                 </div>
             </div>
+            <div className="container d-flex justify-content-between mb-4">
+             <button className="btn btn-dark" onClick={this.prevNews}>Previous</button>
+             <button className="btn btn-dark" onClick={this.nextNews}>Next</button>
+            </div>
+            </>
         )
     }
 }
