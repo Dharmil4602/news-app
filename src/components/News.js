@@ -281,15 +281,14 @@ export class News extends Component {
                 <div className="container">
                     <h2>Headlines</h2>
                     <div className="row">
-                        <div className="col-md-4">
-                            <NewsItem title="myTitle" description="myDescription" imgUrl="https://static.independent.co.uk/2022/03/19/19/SEI94405733.jpg?quality=75&width=1200&auto=webp" />
-                        </div>
-                        <div className="col-md-4">
-                            <NewsItem title="myTitle" description="myDescription" />
-                        </div>
-                        <div className="col-md-4">
-                            <NewsItem title="myTitle" description="myDescription" />
-                        </div>
+                    {this.state.articles.map((element)=>{
+
+                        // Here we have used the "key" because as we have used map method, we need to specify the key in that. element.title and all that are fetched from the object/json we provided above
+
+                        return <div className="col-md-4" key={element.url}>
+                        <NewsItem title={element.title.slice(0,48)} description={element.description.slice(0, 54)} imgUrl={element.urlToImage} newsUrl={element.url}/>
+                    </div>
+                    })}
                     </div>
                 </div>
             </div>
