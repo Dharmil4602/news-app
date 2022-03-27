@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import NewsItem from './NewsItem'
+import Spinner from './Spinner';
 
 export class News extends Component {
         // Constructor will run first, then render method will run and then remaining methods will run
@@ -18,37 +19,43 @@ export class News extends Component {
     // componentDidMount will run after the render method will run
 
     async componentDidMount() {
-      let url = "https://newsapi.org/v2/top-headlines?country=in&apiKey=4871d65e1293480d8d9991b06259253e&page=1"
+      let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=4871d65e1293480d8d9991b06259253e&page=1&pageSize=${this.props.pageSize}`
 
+      this.setState({loading: true})
       let data = await fetch(url) 
       let djson = await data.json()
       console.log(djson)
-      this.setState({articles: djson.articles})
+      this.setState({articles: djson.articles,
+    loading: false})
     }
     
     prevNews = async ()=>{
         console.log("Previous Clicked");
-        let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=4871d65e1293480d8d9991b06259253e&page=${this.state.page - 1}`
+        let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=4871d65e1293480d8d9991b06259253e&page=${this.state.page - 1}&pageSize=${this.props.pageSize}`
 
+        this.setState({loading: true})
       let data = await fetch(url) 
       let djson = await data.json()
       console.log(djson)
       this.setState({
           articles: djson.articles,
-          page: this.state.page - 1
+          page: this.state.page - 1,
+          loading: false
         })
     }
 
     nextNews = async ()=>{
         console.log("Next Clicked");
-        let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=4871d65e1293480d8d9991b06259253e&page=${this.state.page + 1}`
+        let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=4871d65e1293480d8d9991b06259253e&page=${this.state.page + 1}&pageSize=${this.props.pageSize}`
 
+        this.setState({loading: true})
       let data = await fetch(url) 
       let djson = await data.json()
       console.log(djson)
       this.setState({
           articles: djson.articles,
-          page: this.state.page + 1
+          page: this.state.page + 1,
+          loading: false
         })
     }
     render() {
@@ -57,8 +64,10 @@ export class News extends Component {
             <div>
                 <div className="container my-4">
                     <h2>Top Headlines</h2>
+                    {this.state.loading && <Spinner/>} {/*This says that if the loading is true than and only than show the loading gif else not*/}
+
                     <div className="row">
-                    {this.state.articles.map((element)=>{
+                    {!this.state.loading && this.state.articles.map((element)=>{
 
                         // Here we have used the "key" because as we have used map method, we need to specify the key in that. element.title and all that are fetched from the object/json we provided above
 
